@@ -27,14 +27,19 @@ for filename in onlyfiles:
         onlyfiles.remove(filename)
 print("Files to work on",onlyfiles)
 try:
-    sh = int(input("Enter Sprite Sheet height: "))
+    sh = int(input("Enter Sprite Sheet height (px) [default-"+str(hh)+"]: "))
 except:
     sh = hh
-sw = hw * len(onlyfiles)
+try:
+    spacing = int(input("Enter specing (px) [default-0]: "))
+except:
+    spacing = 0
+ratio = sh / hh
+spacing = int(spacing / ratio)
+sw = (hw + (2 * spacing)) * len(onlyfiles)
 s_sheet = np.zeros((hh,sw,hc),dtype=float)
 for n in range(0,len(onlyfiles)):
-    s_sheet = insert_img([0,n * hw], s_sheet, cv2.imread(direc + "/" + onlyfiles[n], cv2.IMREAD_UNCHANGED),hh,hw)
-ratio = sh / hh
+    s_sheet = insert_img([0,(n * hw) + ((2*n + 1) * spacing)], s_sheet, cv2.imread(direc + "/" + onlyfiles[n], cv2.IMREAD_UNCHANGED),hh,hw)
 resized = cv2.resize(s_sheet, (int(ratio * sw),sh))
 if not path.exists(direc + "/ss/"):
     makedirs(direc + "/ss/")
